@@ -49,7 +49,7 @@ function shorten() {
 				'dataType': 'json',
 				'contentType': 'application/json; charset=utf-8'
 			})
-			alert("Shortlink created at https://bayview.ml/" + getSlug());
+			alert("Shortlink created at https://bayview.ml#" + getSlug());
 		} else {
 			alert("Slug is taken!");
 		}
