@@ -1,23 +1,34 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300);
+
 body.home {
 	height: 100%;
 	background-color: #f4f4f4;
 	color: #333;
 }
+
 a:visited {
-    color: #990000;
+	color: #990000;
 }
+
 a:link {
-    color: #cc0000;
+	color: #cc0000;
 }
+
 .form-control {
 	border-radius: 0;
 }
-.modal {color: #000;}
+
+.modal {
+	color: #000;
+}
+
 .home {
-  margin-bottom: 0; /* Remove the default bottom margin of .jumbotron */
-  min-height: 100%;  /* Fallback for vh unit */
-  min-height: 100vh; /* You might also want to use
+	margin-bottom: 0;
+	/* Remove the default bottom margin of .jumbotron */
+	min-height: 100%;
+	/* Fallback for vh unit */
+	min-height: 100vh;
+	/* You might also want to use
                         'height' property instead.
 
                         Note that for percentage values of
@@ -27,38 +38,36 @@ a:link {
 
                         In this case the parent of '.vertical-center'
                         is the <body> element */
-
-  /* Make it a flex container */
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
-  display: -webkit-flex;
-  display: flex;
-
-  /* Align the bootstrap's container vertically */
-    -webkit-box-align : center;
-  -webkit-align-items : center;
-       -moz-box-align : center;
-       -ms-flex-align : center;
-          align-items : center;
-
-  /* In legacy web browsers such as Firefox 9
+	/* Make it a flex container */
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	/* Align the bootstrap's container vertically */
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	-moz-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	/* In legacy web browsers such as Firefox 9
      we need to specify the width of the flex container */
-  width: 100%;
-
-  /* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
+	width: 100%;
+	/* Also 'margin: 0 auto' doesn't have any effect on flex items in such web browsers
      hence the bootstrap's container won't be aligned to the center anymore.
 
      Therefore, we should use the following declarations to get it centered again */
-         -webkit-box-pack : center;
-            -moz-box-pack : center;
-            -ms-flex-pack : center;
-  -webkit-justify-content : center;
-          justify-content : center;
+	-webkit-box-pack: center;
+	-moz-box-pack: center;
+	-ms-flex-pack: center;
+	-webkit-justify-content: center;
+	justify-content: center;
 }
+
 .container {
 	font-family: "Roboto", Arial, sans-serif;
 }
+
 .container h1 {
 	font-weight: 300;
 }
@@ -66,54 +75,70 @@ a:link {
 .dl-horizontal dt {
 	width: 30%;
 }
+
 .dl-horizontal dd {
 	margin-left: 32%;
 }
 
-#shareboxes{
-	margin-top:15px;
+#shareboxes {
+	margin-top: 15px;
 }
 
 div.share {
-	margin-right:1em;
-	padding:0 0 1em 0;
+	margin-right: 1em;
+	padding: 0 0 1em 0;
 }
-#origlink{
-	display:inline-block;
-	white-space:pre;
-	overflow:hidden;
-	vertical-align:-2px;
+
+#origlink {
+	display: inline-block;
+	white-space: pre;
+	overflow: hidden;
+	vertical-align: -2px;
 }
+
 #tweet_body {
-	height:6em;
+	height: 6em;
 	color: #333;
 	width: 100%;
 	box-sizing: border-box;
-	background: #fff; border: 1px solid rgba(0,0,0,0.25);
+	background: #fff;
+	border: 1px solid rgba(0, 0, 0, 0.25);
 	padding: 2rem;
 	font-size: 2rem;
 }
+
 #charcount {
-	padding-left:5px;
-	color:#88c0eb;
+	padding-left: 5px;
+	color: #88c0eb;
 }
+
 #charcount.negative {
-	color:red;
+	color: red;
 }
+
 #share_links a {
-	padding:0 12px 0 18px;
-	font-weight:bold
+	padding: 0 12px 0 18px;
+	font-weight: bold
 }
+
 #share_links a:hover {
-	background-position:2px center;
-}
-#share_tw {background:transparent url(../images/twitter.png) left center no-repeat;}
-#share_fb {background:transparent url(../images/facebook.png) left center no-repeat;}
-#share_ff {background:transparent url(../images/friendfeed.png) left center no-repeat;}
-
-#copylink{
-display: none;
+	background-position: 2px center;
 }
 
-#copylink:hover, #copylink.hover {
+#share_tw {
+	background: transparent url(../images/twitter.png) left center no-repeat;
 }
+
+#share_fb {
+	background: transparent url(../images/facebook.png) left center no-repeat;
+}
+
+#share_ff {
+	background: transparent url(../images/friendfeed.png) left center no-repeat;
+}
+
+#copylink {
+	display: none;
+}
+
+#copylink:hover, #copylink.hover {}

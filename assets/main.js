@@ -11,8 +11,8 @@ if (window.location.hash != "") {
 }
 
 function validateURL(url) {
-    var validatorRegex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
-    return validatorRegex.test(url);
+	var validatorRegex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
+	return validatorRegex.test(url);
 }
 
 function getURL() {
@@ -22,6 +22,27 @@ function getURL() {
 	} else {
 		alert("Invalid long url!");
 		exit();
+	}
+}
+
+function copy(text) {
+	var copyArea = document.createElement("textarea");
+	copyArea.value = text;
+	copyArea.style.top = "0";
+	copyArea.style.left = "0";
+	copyArea.style.position = "fixed";
+	document.body.appendChild(copyArea);
+	copyArea.focus();
+	copyArea.select();
+	document.execCommand('copy');
+	document.body.removeChild(copyArea);
+}
+
+function asyncopy(text) {
+	if (navigator.clipboard) {
+		navigator.clipboard.writeText(text);
+	} else {
+		copy(text);
 	}
 }
 
@@ -38,6 +59,8 @@ function shorten() {
 		alert("A slug is required!");
 		return;
 	}
+
+	// Send JQuery request
 	$.getJSON(endpoint + "/" + getSlug(), function(data) {
 		data = data["result"];
 		if (data == null) {
@@ -50,30 +73,26 @@ function shorten() {
 				'dataType': 'json',
 				'contentType': 'application/json; charset=utf-8'
 			})
-			alert("Shortlink created at https://bayview.ml#" + getSlug());
+			if (confirm("Shortlink created at https://bayview.ml#" + getSlug() + ". Copy to clipboard?")) {
+				copy("https://bayview.ml#" + getSlug());
+			}
 		} else {
-			alert("Slug is taken!");
+			alert("That slug is taken!");
 		}
 	});
 }
 
 document.getElementById("url").focus();
 document.getElementById("url").addEventListener("keyup", function(event) {
-
-	// Enter key
-	if (event.keyCode === 13) {
+	if (event.keyCode === 13) { // Enter key
 		event.preventDefault();
 		document.getElementById("shorten").click();
 	}
 });
 document.getElementById("slug").addEventListener("keyup", function(event) {
-
-	// Enter key
-	if (event.keyCode === 13) {
+	if (event.keyCode === 13) { // Enter key
 		event.preventDefault();
 		document.getElementById("shorten").click();
 	}
-
-	// Live update
-	document.getElementById("shortlink").innerHTML = getSlug();
+	document.getElementById("shortlink").innerHTML = getSlug(); // Live update
 });
