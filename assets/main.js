@@ -10,17 +10,18 @@ if (window.location.hash != "") {
 	});
 }
 
-// Make page visible after redirect processes to avoid flashing
-//document.getElementById("page").style.display = "block";
+function validateURL(url) {
+    var validatorRegex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{2}))(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
+    return validatorRegex.test(url);
+}
 
 function getURL() {
 	var url = document.getElementById("url").value;
-	var protocolChk = url.startsWith("http://") || url.startsWith("https://");
-	if (!protocolChk) {
-		newurl = "https://" + url;
-		return newurl;
-	} else {
+	if (validateURL(url)) {
 		return url;
+	} else {
+		alert("Invalid long url!");
+		exit();
 	}
 }
 
@@ -29,11 +30,11 @@ function getSlug() {
 }
 
 function shorten() {
-	if (getURL() == "") {
+	if (document.getElementById("url").value == "") {
 		alert("A long URL is required!");
 		return;
 	}
-	if (getSlug() == "") {
+	if (document.getElementById("slug").value == "") {
 		alert("A slug is required!");
 		return;
 	}
@@ -55,3 +56,24 @@ function shorten() {
 		}
 	});
 }
+
+document.getElementById("url").focus();
+document.getElementById("url").addEventListener("keyup", function(event) {
+
+	// Enter key
+	if (event.keyCode === 13) {
+		event.preventDefault();
+		document.getElementById("shorten").click();
+	}
+});
+document.getElementById("slug").addEventListener("keyup", function(event) {
+
+	// Enter key
+	if (event.keyCode === 13) {
+		event.preventDefault();
+		document.getElementById("shorten").click();
+	}
+
+	// Live update
+	document.getElementById("shortlink").innerHTML = getSlug();
+});
