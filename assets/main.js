@@ -29,6 +29,14 @@ function getSlug() {
 }
 
 function shorten() {
+	if (getURL() == "") {
+		alert("A long URL is required!");
+		return;
+	}
+	if (getSlug() == "") {
+		alert("A slug is required!");
+		return;
+	}
 	$.getJSON(endpoint + "/" + getSlug(), function(data) {
 		data = data["result"];
 		if (data == null) {
