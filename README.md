@@ -14,6 +14,6 @@ This is a custom URL shortener implemented using only HTML/CSS/JS. It uses the b
 ## Configuration
  1. Go to https://www.jsonstore.io/ and copy the endpoint url.
  2. Go to the first line of `/assets/main.js` and replace <endpoint-url-here> with the endpoint url.
- 3. Customize `index.html` if you want, and you're good to go!
+ 3. Customize `index.html` and `/assets/styles.css` if you want, and you're good to go!
 
 Please feel free to use any part of this repository in anything you want, as long as you keep it open-source!
