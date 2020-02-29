@@ -4,8 +4,11 @@ var endpoint = "https://www.jsonstore.io/e3c54c65c90ae3b65c584fd114d23413860cabf
 if (window.location.hash != "") {
 	$.getJSON(endpoint + "/" + window.location.hash.substr(1).toLowerCase(), function(data) {
 		data = data["result"];
-		if (data != null) {
+		if (data != null) { // Redirect
 			window.location.href = data;
+		} else { // Show page
+			document.body.style.backgroundColor = "#f4f4f4";
+			document.getElementById("page").style.display = "inline";
 		}
 	});
 }
