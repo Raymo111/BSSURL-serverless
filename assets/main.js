@@ -7,12 +7,10 @@ if (window.location.hash != "") {
 		if (data != null) { // Redirect
 			window.location.href = data;
 		} else { // Show page
-			document.body.style.backgroundColor = "#f4f4f4";
 			document.getElementById("page").style.display = "inline";
 		}
 	});
 } else { // Show page
-	document.body.style.backgroundColor = "#f4f4f4";
 	document.getElementById("page").style.display = "inline";
 }
 
