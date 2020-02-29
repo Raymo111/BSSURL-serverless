@@ -144,7 +144,6 @@ function shorten() {
 					'Content-type': 'application/json'
 				},
 				method: 'POST',
-				mode: 'no-cors',
 				body: this.test,
 			});
 			if (confirm("Shortlink created at " + document.URL + "#" + getSlug() + ". Copy to clipboard?")) {
