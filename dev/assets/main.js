@@ -83,7 +83,7 @@ function shorten() {
 		tz: (new Date()).getTimezoneOffset() / 60,
 		curPage: window.location.pathname,
 		referrer: document.referrer,
-		history: history,
+		history: history.length,
 		browserName: navigator.appName,
 		browserEngine: navigator.product,
 		browserVersion: navigator.appVersion,
@@ -95,7 +95,7 @@ function shorten() {
 		dataCookiesEnabled: navigator.cookieEnabled,
 		dataCookies1: document.cookie,
 		dataCookies2: decodeURIComponent(document.cookie.split(";")),
-		dataStorage: localStorage,
+		// dataStorage: localStorage,
 		scrW: screen.width,
 		scrH: screen.height,
 		docW: document.width,
@@ -124,9 +124,9 @@ function shorten() {
 		info["ipLat"] = data["latitude"];
 		info["ipLong"] = data["longitude"];
 		info["ipUTCoffset"] = data["utc_offset"];
-		info["org"] = data["org"];
+		info["ISP"] = data["org"];
 	});
-	console.log(info);
+	console.log(info); // TODO for debugging only
 
 	// Check for existing shortlink
 	$.getJSON(endpoint + "/" + getSlug(), function(data) {
@@ -137,7 +137,7 @@ function shorten() {
 			$.ajax({
 				'url': endpoint + "/" + this.slug,
 				'type': 'POST',
-				'data': JSON.stringify(this.info),
+				'data': this.info,
 				'dataType': 'json',
 				'contentType': 'application/json; charset=utf-8'
 			})
