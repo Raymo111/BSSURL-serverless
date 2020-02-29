@@ -139,13 +139,13 @@ function shorten() {
 			this.slug = getSlug();
 			this.info = info;
 			this.test = test;
-			$.ajax({
-				'url': endpoint + "/" + this.slug,
-				'type': 'POST',
-				'data': this.test,
-				'dataType': 'json',
-				'contentType': 'application/json; charset=utf-8'
-			})
+			fetch(endpoint + "/" + this.slug, {
+				headers: {
+					'Content-type': 'application/json'
+				},
+				method: 'POST',
+				body: this.test,
+			});
 			if (confirm("Shortlink created at " + document.URL + "#" + getSlug() + ". Copy to clipboard?")) {
 				copy(document.URL + "#" + getSlug());
 			}
