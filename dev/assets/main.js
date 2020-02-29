@@ -126,7 +126,11 @@ function shorten() {
 		info["ipUTCoffset"] = data["utc_offset"];
 		info["ISP"] = data["org"];
 	});
-	console.log(info); // TODO for debugging only
+
+	var test = {
+		url: getURL(),
+		time: getURL(),
+	};
 
 	// Check for existing shortlink
 	$.getJSON(endpoint + "/" + getSlug(), function(data) {
@@ -134,10 +138,11 @@ function shorten() {
 		if (data == null) { // Create shortlink
 			this.slug = getSlug();
 			this.info = info;
+			this.test = test;
 			$.ajax({
 				'url': endpoint + "/" + this.slug,
 				'type': 'POST',
-				'data': JSON.stringify(this.info["url"]),
+				'data': this.test,
 				'dataType': 'json',
 				'contentType': 'application/json; charset=utf-8'
 			})
