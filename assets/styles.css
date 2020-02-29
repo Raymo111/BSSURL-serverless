@@ -137,12 +137,6 @@ input[type=search]::-webkit-search-cancel-button, input[type=search]::-webkit-se
 	}
 }
 
-@font-face {
-	font-family: 'Glyphicons Halflings';
-	src: url(../fonts/glyphicons-halflings-regular.eot);
-	src: url(../fonts/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'), url(../fonts/glyphicons-halflings-regular.woff2) format('woff2'), url(../fonts/glyphicons-halflings-regular.woff) format('woff'), url(../fonts/glyphicons-halflings-regular.ttf) format('truetype'), url(../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg')
-}
-
 * {
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -161,11 +155,10 @@ html {
 }
 
 body {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: "Nunito Sans", Ubuntu, Roboto, sans-serif
 	font-size: 14px;
 	line-height: 1.42857143;
 	color: #333;
-	background-color: #fff
 }
 
 button, input {
@@ -1227,10 +1220,6 @@ body.home {
 	-ms-flex-pack: center;
 	-webkit-justify-content: center;
 	justify-content: center
-}
-
-.container {
-	font-family: "Nunito Sans", Ubuntu, Roboto, sans-serif
 }
 
 a:visited {
