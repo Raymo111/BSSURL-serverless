@@ -11,6 +11,9 @@ if (window.location.hash != "") {
 			document.getElementById("page").style.display = "inline";
 		}
 	});
+} else { // Show page
+	document.body.style.backgroundColor = "#f4f4f4";
+	document.getElementById("page").style.display = "inline";
 }
 
 function validateURL(url) {
