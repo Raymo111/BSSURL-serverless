@@ -16,12 +16,14 @@ if (window.location.hash != "") {
 
 // Handle changes to hash in URL
 window.onhashchange = function() {
-	$.getJSON(endpoint + "/" + window.location.hash.substr(1).toLowerCase(), function(data) {
-		data = data["result"];
-		if (data != null) { // Redirect
-			window.location.href = data;
-		}
-	});
+	if (window.location.hash != "") {
+		$.getJSON(endpoint + "/" + window.location.hash.substr(1).toLowerCase(), function(data) {
+			data = data["result"];
+			if (data != null) { // Redirect
+				window.location.href = data;
+			}
+		});
+	}
 }
 
 function validateURL(url) {
@@ -87,8 +89,8 @@ function shorten() {
 				'dataType': 'json',
 				'contentType': 'application/json; charset=utf-8'
 			})
-			if (confirm("Shortlink created at https://bayview.ml#" + getSlug() + ". Copy to clipboard?")) {
-				copy("https://bayview.ml#" + getSlug());
+			if (confirm("Shortlink created at " + document.URL + "#" + getSlug() + ". Copy to clipboard?")) {
+				copy(document.URL + "#" + getSlug());
 			}
 		} else {
 			alert("That slug is taken!");
