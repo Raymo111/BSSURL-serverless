@@ -14,6 +14,16 @@ if (window.location.hash != "") {
 	document.getElementById("page").style.display = "inline";
 }
 
+// Handle changes to hash in URL
+window.onhashchange = function() {
+	$.getJSON(endpoint + "/" + window.location.hash.substr(1).toLowerCase(), function(data) {
+		data = data["result"];
+		if (data != null) { // Redirect
+			window.location.href = data;
+		}
+	});
+}
+
 function validateURL(url) {
 	var validatorRegex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.[a-zA-Z]{2,})(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
 	return validatorRegex.test(url);
