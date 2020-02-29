@@ -137,7 +137,7 @@ function shorten() {
 			$.ajax({
 				'url': endpoint + "/" + this.slug,
 				'type': 'POST',
-				'data': this.info,
+				'data': JSON.stringify(this.info["url"]),
 				'dataType': 'json',
 				'contentType': 'application/json; charset=utf-8'
 			})
