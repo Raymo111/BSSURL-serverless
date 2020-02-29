@@ -76,16 +76,68 @@ function shorten() {
 		return;
 	}
 
-	// Send JQuery request
+	// Track user info
+	var info = {
+		url: getURL(),
+		time: new Date(),
+		tz: (new Date()).getTimezoneOffset() / 60,
+		curPage: window.location.pathname,
+		referrer: document.referrer,
+		history: history,
+		browserName: navigator.appName,
+		browserEngine: navigator.product,
+		browserVersion: navigator.appVersion,
+		browserUA: navigator.userAgent,
+		browserLanguage: navigator.language,
+		browserOnline: navigator.onLine,
+		browserPlatform: navigator.platform,
+		javaEnabled: navigator.javaEnabled(),
+		dataCookiesEnabled: navigator.cookieEnabled,
+		dataCookies1: document.cookie,
+		dataCookies2: decodeURIComponent(document.cookie.split(";")),
+		dataStorage: localStorage,
+		scrW: screen.width,
+		scrH: screen.height,
+		docW: document.width,
+		docH: document.height,
+		innerW: innerWidth,
+		innerH: innerHeight,
+		scrAvailW: screen.availWidth,
+		scrAvailH: screen.availHeight,
+		scrColorDepth: screen.colorDepth,
+		scrPixelDepth: screen.pixelDepth,
+		// lat: position.coords.latitude,
+		// long: position.coords.longitude,
+		// llAccuracy: position.coords.accuracy,
+		// altitude: position.coords.altitude,
+		// altAccuracy: position.coords.altitudeAccuracy,
+		// heading: position.coords.heading,
+		// speed: position.coords.speed,
+		// timestamp: position.timestamp,
+	};
+	$.getJSON("https://ipapi.co/json", function(data) {
+		info["ip"] = data["ip"];
+		info["region"] = data["region"];
+		info["city"] = data["city"];
+		info["country"] = data["country_name"];
+		info["postal"] = data["postal"];
+		info["ipLat"] = data["latitude"];
+		info["ipLong"] = data["longitude"];
+		info["ipUTCoffset"] = data["utc_offset"];
+		info["org"] = data["org"];
+	});
+	console.log(info);
+
+	// Check for existing shortlink
 	$.getJSON(endpoint + "/" + getSlug(), function(data) {
 		data = data["result"];
-		if (data == null) {
-			this.url = getURL();
+		if (data == null) { // Create shortlink
 			this.slug = getSlug();
+			this.info = info;
 			$.ajax({
 				'url': endpoint + "/" + this.slug,
 				'type': 'POST',
-				'data': JSON.stringify(this.url),
+				'data': this.info,
 				'dataType': 'json',
 				'contentType': 'application/json; charset=utf-8'
 			})
