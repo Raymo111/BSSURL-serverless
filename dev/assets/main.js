@@ -39,7 +39,7 @@ async function init() { // Wrap in stupid function b/c JS is super annoying
 	// Handle changes to hash in URL
 	window.onhashchange = async function() {
 		if (window.location.hash != "") {
-			await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) { // TODO: fix respcodes
+			await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
 				if (resp.status === 200) { // Redirect
 					window.location.href = resp;
 				} else { // Throw error
@@ -145,7 +145,7 @@ async function shorten() {
 	});
 
 	// Check for existing shortlink
-	await getReq(getSlug()).then(function(resp) {
+	await getReq(getSlug()).then(async function(resp) {
 		if (resp == null) { // Create shortlink
 			this.info = info;
 			await fetch(endpoint, {
