@@ -1,5 +1,4 @@
-//let endpoint = "https://dev-bssurl.raymo.workers.dev";
-let endpoint = "https://seshanfunction.azurewebsites.net/api/HttpTrigger1";
+let endpoint = "https://dev-bssurl.raymo.workers.dev";
 
 async function getReq(slug) {
 	return await fetch(endpoint, {
