@@ -41,7 +41,7 @@ async function init() { // Wrap in async function b/c JS is super annoying
 		if (window.location.hash != "") {
 			await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
 				if (resp.status === 200) { // Redirect
-					window.location.href = resp;
+					window.location.href = resp.url;
 				} else { // Throw error
 					err(resp);
 				}
