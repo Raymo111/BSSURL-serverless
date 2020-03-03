@@ -18,34 +18,39 @@ function err(e) {
 	console.log(e);
 }
 
-// Redirect
-if (window.location.hash != "") {
-	await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
-		if (resp.status === 200) { // Redirect
-			window.location.href = resp;
-		} else { // Show page
-			if (resp.status >= 500) { // Throw error
-				err(resp);
-			}
-			document.getElementById("page").style.display = "inline";
-		}
-	});
-} else { // Show page
-	document.getElementById("page").style.display = "inline";
-}
+async function init() { // Wrap in stupid function b/c JS is super annoying
 
-// Handle changes to hash in URL
-window.onhashchange = function() {
+	// Redirect
 	if (window.location.hash != "") {
-		await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) { // TODO: fix respcodes
+		await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
 			if (resp.status === 200) { // Redirect
 				window.location.href = resp;
-			} else { // Throw error
-				err(resp);
+			} else { // Show page
+				if (resp.status >= 500) { // Throw error
+					err(resp);
+				}
+				document.getElementById("page").style.display = "inline";
 			}
 		});
+	} else { // Show page
+		document.getElementById("page").style.display = "inline";
+	}
+
+	// Handle changes to hash in URL
+	window.onhashchange = function() {
+		if (window.location.hash != "") {
+			await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) { // TODO: fix respcodes
+				if (resp.status === 200) { // Redirect
+					window.location.href = resp;
+				} else { // Throw error
+					err(resp);
+				}
+			});
+		}
 	}
 }
+
+init();
 
 function getURL() {
 	let url = document.getElementById("url").value;
@@ -76,7 +81,7 @@ function getSlug() {
 	return document.getElementById("slug").value.toLowerCase();
 }
 
-function shorten() {
+async function shorten() {
 	if (document.getElementById("url").value == "") {
 		alert("A long URL is required!");
 		return;
