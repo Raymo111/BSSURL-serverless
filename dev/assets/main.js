@@ -156,7 +156,8 @@ async function shorten() {
 				body: JSON.stringify({
 					"type": "POST",
 					"slug": getSlug(),
-					"data": JSON.stringify(this.info)
+					"url": getURL(),
+					"data": this.info
 				})
 			}).then(function(resp) {
 				if (resp.status === 200) {
