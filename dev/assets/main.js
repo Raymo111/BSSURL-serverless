@@ -146,7 +146,7 @@ async function shorten() {
 
 	// Check for existing shortlink
 	await getReq(getSlug()).then(async function(resp) {
-		if (resp == null) { // Create shortlink
+		if (resp == "null") { // Create shortlink
 			this.info = info;
 			await fetch(endpoint, {
 				headers: {
