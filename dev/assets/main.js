@@ -1,5 +1,4 @@
-let endpoint = "https://bssurl.raymo.workers.dev";
-let instance = "dev";
+let endpoint = "https://dev-bssurl.raymo.workers.dev";
 
 async function getReq(slug) {
 	await fetch(endpoint, {
@@ -8,7 +7,6 @@ async function getReq(slug) {
 		},
 		method: 'POST',
 		body: JSON.stringify({
-			"instance": instance,
 			"type": "GET",
 			"slug": slug,
 		})
@@ -156,7 +154,6 @@ async function shorten() {
 				},
 				method: 'POST',
 				body: JSON.stringify({
-					"instance": instance,
 					"type": "POST",
 					"slug": getSlug(),
 					"url": getURL(),
