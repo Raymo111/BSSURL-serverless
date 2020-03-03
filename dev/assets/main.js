@@ -1,12 +1,34 @@
-var endpoint = "https://www.jsonstore.io/e3c54c65c90ae3b65c584fd114d23413860cabfa5637afdd2bd27ffe5408070e";
+let endpoint = "https://bssurl.raymo.workers.dev";
+
+async function getReq(slug) {
+	await fetch(endpoint, {
+		headers: {
+			'Content-type': 'application/json'
+		},
+		method: 'POST',
+		body: JSON.stringify({
+			{
+				"type": "GET",
+				"slug": slug,
+			}
+		})
+	});
+}
+
+function err(e) {
+	alert("Internal error. Try again.");
+	console.log(e);
+}
 
 // Redirect
 if (window.location.hash != "") {
-	$.getJSON(endpoint + "/" + window.location.hash.substr(1).toLowerCase(), function(data) {
-		data = data["result"];
-		if (data != null) { // Redirect
-			window.location.href = data;
+	await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
+		if (resp.status === 200) { // Redirect
+			window.location.href = resp;
 		} else { // Show page
+			if (resp.status >= 500) { // Throw error
+				err(resp);
+			}
 			document.getElementById("page").style.display = "inline";
 		}
 	});
@@ -17,32 +39,22 @@ if (window.location.hash != "") {
 // Handle changes to hash in URL
 window.onhashchange = function() {
 	if (window.location.hash != "") {
-		$.getJSON(endpoint + "/" + window.location.hash.substr(1).toLowerCase(), function(data) {
-			data = data["result"];
-			if (data != null) { // Redirect
-				window.location.href = data;
+		await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) { // TODO: fix respcodes
+			if (resp.status === 200) { // Redirect
+				window.location.href = resp;
+			} else { // Throw error
+				err(resp);
 			}
 		});
 	}
 }
 
-function validateURL(url) {
-	var validatorRegex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.[a-zA-Z]{2,})(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
-	return validatorRegex.test(url);
-}
-
 function getURL() {
-	var url = document.getElementById("url").value;
-	if (validateURL(url)) {
-		return url;
-	} else {
-		alert("Invalid long url!");
-		exit();
-	}
+	let url = document.getElementById("url").value;
 }
 
 function copy(text) {
-	var copyArea = document.createElement("textarea");
+	let copyArea = document.createElement("textarea");
 	copyArea.value = text;
 	copyArea.style.top = "0";
 	copyArea.style.left = "0";
@@ -77,7 +89,7 @@ function shorten() {
 	}
 
 	// Track user info
-	var info = {
+	let info = {
 		url: getURL(),
 		time: new Date(),
 		tz: (new Date()).getTimezoneOffset() / 60,
@@ -115,40 +127,45 @@ function shorten() {
 		// speed: position.coords.speed,
 		// timestamp: position.timestamp,
 	};
-	$.getJSON("https://ipapi.co/json", function(data) {
-		info["ip"] = data["ip"];
-		info["region"] = data["region"];
-		info["city"] = data["city"];
-		info["country"] = data["country_name"];
-		info["postal"] = data["postal"];
-		info["ipLat"] = data["latitude"];
-		info["ipLong"] = data["longitude"];
-		info["ipUTCoffset"] = data["utc_offset"];
-		info["ISP"] = data["org"];
+
+	// TODO: Fix requests from here onwards
+	await fetch("https://ipapi.co/json").then(function(resp) {
+		info["ip"] = resp["ip"];
+		info["region"] = resp["region"];
+		info["city"] = resp["city"];
+		info["country"] = resp["country_name"];
+		info["postal"] = resp["postal"];
+		info["ipLat"] = resp["latitude"];
+		info["ipLong"] = resp["longitude"];
+		info["ipUTCoffset"] = resp["utc_offset"];
+		info["ISP"] = resp["org"];
 	});
 
-	var test = {
-		url: getURL(),
-		time: getURL(),
-	};
-
 	// Check for existing shortlink
-	$.getJSON(endpoint + "/" + getSlug(), function(data) {
-		data = data["result"];
-		if (data == null) { // Create shortlink
-			this.slug = getSlug();
+	await getReq(getSlug()).then(function(resp) {
+		if (resp == null) { // Create shortlink
 			this.info = info;
-			this.test = test;
-			fetch(endpoint + "/" + this.slug, {
+			await fetch(endpoint, {
 				headers: {
 					'Content-type': 'application/json'
 				},
 				method: 'POST',
-				body: this.test,
+				body: JSON.stringify({
+					{
+						"type": "POST",
+						"slug": getSlug(),
+						"data": this.info;
+					}
+				})
+			}).then(function(resp) {
+				if (resp.status === 200) {
+					if (confirm("Shortlink created at " + document.URL + "#" + getSlug() + ". Copy to clipboard?")) {
+						copy(document.URL + "#" + getSlug());
+					}
+				} else {
+					err(resp);
+				}
 			});
-			if (confirm("Shortlink created at " + document.URL + "#" + getSlug() + ". Copy to clipboard?")) {
-				copy(document.URL + "#" + getSlug());
-			}
 		} else {
 			alert("That slug is taken!");
 		}
