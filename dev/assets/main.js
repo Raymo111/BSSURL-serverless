@@ -2,7 +2,7 @@
 let endpoint = "https://seshanfunction.azurewebsites.net/api/HttpTrigger1";
 
 async function getReq(slug) {
-	await fetch(endpoint, {
+	return await fetch(endpoint, {
 		headers: {
 			'Content-type': 'application/json'
 		},
@@ -25,7 +25,7 @@ async function init() { // Wrap in stupid function b/c JS is super annoying
 	if (window.location.hash != "") {
 		await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
 			if (resp.status === 200) { // Redirect
-				window.location.href = resp;
+				window.location.href = resp.url;
 			} else { // Show page
 				if (resp.status >= 500) { // Throw error
 					err(resp);
