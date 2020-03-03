@@ -37,7 +37,7 @@ async function init() { // Wrap in stupid function b/c JS is super annoying
 	}
 
 	// Handle changes to hash in URL
-	window.onhashchange = function() {
+	window.onhashchange = async function() {
 		if (window.location.hash != "") {
 			await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) { // TODO: fix respcodes
 				if (resp.status === 200) { // Redirect
