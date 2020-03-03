@@ -7,10 +7,8 @@ async function getReq(slug) {
 		},
 		method: 'POST',
 		body: JSON.stringify({
-			{
-				"type": "GET",
-				"slug": slug,
-			}
+			"type": "GET",
+			"slug": slug,
 		})
 	});
 }
@@ -151,11 +149,9 @@ function shorten() {
 				},
 				method: 'POST',
 				body: JSON.stringify({
-					{
-						"type": "POST",
-						"slug": getSlug(),
-						"data": this.info;
-					}
+					"type": "POST",
+					"slug": getSlug(),
+					"data": this.info;
 				})
 			}).then(function(resp) {
 				if (resp.status === 200) {
