@@ -18,7 +18,7 @@ function err(e) {
 	console.log(e);
 }
 
-async function init() { // Wrap in stupid function b/c JS is super annoying
+async function init() { // Wrap in async function b/c JS is super annoying
 
 	// Redirect
 	if (window.location.hash != "") {
