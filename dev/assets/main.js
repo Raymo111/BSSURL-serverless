@@ -171,7 +171,6 @@ async function shorten() {
 		}
 	});
 }
-}
 
 document.getElementById("url").focus();
 document.getElementById("url").addEventListener("keyup", function(event) {
