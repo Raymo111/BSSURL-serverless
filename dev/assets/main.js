@@ -1,16 +1,7 @@
-let endpoint = "https://dev-bssurl.raymo.workers.dev";
+let endpoint = "https://dev-bssurl.raymo.workers.dev/";
 
 async function getReq(slug) {
-	return await fetch(endpoint, {
-		headers: {
-			'Content-type': 'application/json'
-		},
-		method: 'POST',
-		body: JSON.stringify({
-			"type": "GET",
-			"slug": slug,
-		})
-	});
+	return await fetch(endpoint + slug);
 }
 
 function err(resp) {
@@ -23,7 +14,7 @@ async function init() { // Wrap in async function b/c JS is super annoying
 	// Redirect
 	if (window.location.hash != "") {
 		await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
-			if (resp.status === 200) { // Redirect
+			if (resp.status === 200 && resp.body != null) { // Redirect
 				window.location.href = resp.body.url;
 			} else { // Show page
 				if (resp.status >= 500) { // Throw error
@@ -40,7 +31,7 @@ async function init() { // Wrap in async function b/c JS is super annoying
 	window.onhashchange = async function() {
 		if (window.location.hash != "") {
 			await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
-				if (resp.status === 200) { // Redirect
+				if (resp.status === 200 && resp.body != null) { // Redirect
 					window.location.href = resp.body.url;
 				} else { // Throw error
 					err(resp);
@@ -146,21 +137,10 @@ async function shorten() {
 
 	// Check for existing shortlink
 	await getReq(getSlug()).then(async function(resp) {
-		if (resp.body == null) { // Create shortlink
+		if (resp.status === 200 && resp.body == null) { // Create shortlink
 			this.info = info;
-			await fetch(endpoint, {
-				headers: {
-					'Content-type': 'application/json'
-				},
-				method: 'POST',
-				body: JSON.stringify({
-					"type": "POST",
-					"slug": getSlug(),
-					"url": getURL(),
-					"data": this.info
-				})
-			}).then(function(resp) {
-				if (resp.status === 200) {
+			await fetch(endpoint).then(function(resp) {
+				if (resp.status === 201) {
 					if (confirm("Shortlink created at " + document.URL + "#" + getSlug() + ". Copy to clipboard?")) {
 						copy(document.URL + "#" + getSlug());
 					}

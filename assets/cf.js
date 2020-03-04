@@ -34,12 +34,6 @@ async function readRequestBody(request) {
   }
 }
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-}
-
 function validateURL(url) {
   var validatorRegex = /^(https?|ftp):\/\/([a-zA-Z0-9.-]+(:[a-zA-Z0-9.&%$-]+)*@)*((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}|([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.[a-zA-Z]{2,})(:[0-9]+)*(\/($|[a-zA-Z0-9.,?'\\+&%$#=~_-]+))*$/;
   return validatorRegex.test(url);
@@ -47,23 +41,31 @@ function validateURL(url) {
 
 function handleOptions(request) {
   return new Response(null, {
-    headers: corsHeaders
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    }
   })
 }
 
+const CORSh = {
+  'Access-Control-Allow-Origin': '*'
+};
+
 async function handleRequest(request) {
   try {
-    let body = JSON.parse(await readRequestBody(request));
-    if (body.type === "GET") {
-      let result = await fetch(endpoint + "/" + body.slug, {
+    if (request.method === "GET") {
+      let result = await fetch(endpoint + request.url.split("workers.dev").pop(), {
         headers: {
           'Content-type': 'application/json'
         },
         method: 'GET'
       });
       let res = JSON.parse(await readRequestBody(result));
-      return new Response(JSON.stringify(res.result), { status: 200, headers: { 'Access-Control-Allow-Origin': '*' } });
-    } else if (body.type === "POST") {
+      return new Response(res.result == null ? null : JSON.stringify(res.result), { status: result.status, headers: CORSh });
+    } else if (request.method === "POST") {
+      let body = JSON.parse(await readRequestBody(request));
       let data = {
         "url": body.url,
         "data": body.data
@@ -76,13 +78,13 @@ async function handleRequest(request) {
           method: 'POST',
           body: JSON.stringify(data)
         });
-        let res = await readRequestBody(result);
-        return new Response(JSON.stringify(res.result), { status: 200, headers: { 'Access-Control-Allow-Origin': '*' } });
+        let res = JSON.parse(await readRequestBody(result));
+        return new Response(res.result == null ? null : JSON.stringify(res.result), { status: result.status, headers: CORSh });
       } else {
-        return new Response("Invalid long URL.", { status: 502, headers: { 'Access-Control-Allow-Origin': '*' } });
+        return new Response("Invalid long URL.", { status: 502, headers: CORSh });
       }
     }
   } catch (e) {
-    return new Response(e, { status: 501, headers: { 'Access-Control-Allow-Origin': '*' } });
+    return new Response(e, { status: 501, headers: CORSh });
   }
 }
