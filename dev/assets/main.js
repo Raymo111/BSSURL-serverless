@@ -13,9 +13,9 @@ async function getReq(slug) {
 	});
 }
 
-function err(e) {
+function err(resp) {
 	alert("Internal error. Try again.");
-	console.log(e);
+	console.log(resp);
 }
 
 async function init() { // Wrap in async function b/c JS is super annoying
@@ -24,7 +24,7 @@ async function init() { // Wrap in async function b/c JS is super annoying
 	if (window.location.hash != "") {
 		await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
 			if (resp.status === 200) { // Redirect
-				window.location.href = resp.url;
+				window.location.href = resp.body.url;
 			} else { // Show page
 				if (resp.status >= 500) { // Throw error
 					err(resp);
@@ -41,7 +41,7 @@ async function init() { // Wrap in async function b/c JS is super annoying
 		if (window.location.hash != "") {
 			await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
 				if (resp.status === 200) { // Redirect
-					window.location.href = resp.url;
+					window.location.href = resp.body.url;
 				} else { // Throw error
 					err(resp);
 				}
@@ -146,7 +146,7 @@ async function shorten() {
 
 	// Check for existing shortlink
 	await getReq(getSlug()).then(async function(resp) {
-		if (resp == "null") { // Create shortlink
+		if (resp.body == "null") { // Create shortlink
 			this.info = info;
 			await fetch(endpoint, {
 				headers: {
