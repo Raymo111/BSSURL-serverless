@@ -145,37 +145,32 @@ async function shorten() {
 		console.log(e);
 	}
 
-	// Check for existing shortlink
-	await getReq(getSlug())
-		.then(r => r.json())
-		.then(async function(resp) {
-			if (resp == null) { // Create shortlink
-				this.info = info;
-				await fetch(endpoint, {
-					headers: {
-						'Content-type': 'application/json'
-					},
-					method: 'POST',
-					body: JSON.stringify({
-						"slug": getSlug(),
-						"url": getURL(),
-						"data": this.info
-					})
-				}).then(function(resp) {
-					if (resp.status === 201) {
-						if (confirm("Shortlink created at " + document.URL + "#" + getSlug() + ". Copy to clipboard?")) {
-							copy(document.URL + "#" + getSlug());
-						}
-					} else if (resp.status === 502) {
-						alert("Invalid long URL!");
-					} else {
-						err(resp.json());
-					}
-				});
-			} else {
-				alert("That slug is taken!");
+	// Create shortlink
+	this.info = info;
+	await fetch(endpoint, {
+		headers: {
+			'Content-type': 'application/json'
+		},
+		method: 'POST',
+		body: JSON.stringify({
+			"slug": getSlug(),
+			"url": getURL(),
+			"data": this.info
+		})
+	}).then(function(resp) {
+		if (resp.status === 201) {
+			if (confirm("Shortlink created at " + document.URL + "#" + getSlug() + ". Copy to clipboard?")) {
+				copy(document.URL + "#" + getSlug());
 			}
-		});
+		} else if (resp.status === 552) {
+			alert("Invalid long URL!");
+		} else if (resp.status === 553) {
+			alert("Slug is taken!");
+		} else {
+			err(resp.json());
+		}
+	});
+}
 }
 
 document.getElementById("url").focus();

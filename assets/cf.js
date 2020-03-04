@@ -73,27 +73,43 @@ async function handleRequest(request) {
 		} else if (request.method === "POST") {
 			let body = JSON.parse(await readRequestBody(request));
 			if (validateURL(body.url)) {
-				let data = {
-					"url": body.url,
-					"data": body.data
-				};
-				let result = await fetch(endpoint + "/" + body.slug, {
+				// Check for existing shortlink
+				let result = await fetch(endpoint + body.slug, {
 					headers: {
 						'Content-type': 'application/json'
 					},
-					method: 'POST',
-					body: JSON.stringify(data)
+					method: 'GET'
 				});
-				let res = JSON.parse(await readRequestBody(result));
-				return new Response(JSON.stringify(res.result), {
-					status: result.status,
-					headers: CORSh
-				});
+				if (JSON.parse(await readRequestBody(request)) == null) {
+					let data = {
+						"url": body.url,
+						"data": body.data
+					};
+					let result = await fetch(endpoint + "/" + body.slug, {
+						headers: {
+							'Content-type': 'application/json'
+						},
+						method: 'POST',
+						body: JSON.stringify(data)
+					});
+					let res = JSON.parse(await readRequestBody(result));
+					return new Response(JSON.stringify(res.result), {
+						status: result.status,
+						headers: CORSh
+					});
+				} else {
+					return new Response(JSON.stringify({
+						"Reason": body.slug + " is in use."
+					}), {
+						status: 553,
+						headers: CORSh
+					});
+				}
 			} else {
 				return new Response(JSON.stringify({
 					"Reason": body.url + " is an invalid long URL."
 				}), {
-					status: 502,
+					status: 552,
 					headers: CORSh
 				});
 			}
@@ -102,7 +118,7 @@ async function handleRequest(request) {
 		return new Response(JSON.stringify({
 			"Reason": e
 		}), {
-			status: 501,
+			status: 551,
 			headers: CORSh
 		});
 	}
