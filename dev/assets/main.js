@@ -83,7 +83,6 @@ async function shorten() {
 
 	// Track user info
 	let info = {
-		url: getURL(),
 		time: new Date(),
 		tz: (new Date()).getTimezoneOffset() / 60,
 		curPage: window.location.pathname,
