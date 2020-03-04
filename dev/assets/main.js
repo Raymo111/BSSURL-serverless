@@ -13,16 +13,15 @@ async function init() { // Wrap in async function b/c JS is super annoying
 
 	// Redirect
 	if (window.location.hash != "") {
-		await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
-			if (resp.status === 200 && resp.body != null) { // Redirect
-				window.location.href = resp.body.url;
-			} else { // Show page
-				if (resp.status >= 500) { // Throw error
-					err(resp);
+		await getReq(window.location.hash.substr(1).toLowerCase())
+			.then(r => r.json())
+			.then(function(resp) {
+				if (resp != null) { // Redirect
+					window.location.href = resp.url;
+				} else { // Show page
+					document.getElementById("page").style.display = "inline";
 				}
-				document.getElementById("page").style.display = "inline";
-			}
-		});
+			});
 	} else { // Show page
 		document.getElementById("page").style.display = "inline";
 	}
@@ -30,13 +29,13 @@ async function init() { // Wrap in async function b/c JS is super annoying
 	// Handle changes to hash in URL
 	window.onhashchange = async function() {
 		if (window.location.hash != "") {
-			await getReq(window.location.hash.substr(1).toLowerCase()).then(function(resp) {
-				if (resp.status === 200 && resp.body != null) { // Redirect
-					window.location.href = resp.body.url;
-				} else { // Throw error
-					err(resp);
-				}
-			});
+			await getReq(window.location.hash.substr(1).toLowerCase())
+				.then(r => r.json())
+				.then(function(resp) {
+					if (resp != null) { // Redirect
+						window.location.href = resp.url;
+					}
+				});
 		}
 	}
 }
@@ -44,7 +43,7 @@ async function init() { // Wrap in async function b/c JS is super annoying
 init();
 
 function getURL() {
-	let url = document.getElementById("url").value;
+	return document.getElementById("url").value;
 }
 
 function copy(text) {
@@ -122,7 +121,6 @@ async function shorten() {
 		// timestamp: position.timestamp,
 	};
 
-	// TODO: Fix requests from here onwards
 	await fetch("https://ipapi.co/json").then(function(resp) {
 		info["ip"] = resp["ip"];
 		info["region"] = resp["region"];
@@ -136,22 +134,37 @@ async function shorten() {
 	});
 
 	// Check for existing shortlink
-	await getReq(getSlug()).then(async function(resp) {
-		if (resp.status === 200 && resp.body == null) { // Create shortlink
-			this.info = info;
-			await fetch(endpoint).then(function(resp) {
-				if (resp.status === 201) {
-					if (confirm("Shortlink created at " + document.URL + "#" + getSlug() + ". Copy to clipboard?")) {
-						copy(document.URL + "#" + getSlug());
+	await getReq(getSlug())
+		.then(r => r.json())
+		.then(async function(resp) {
+			if (resp == null) { // Create shortlink
+				this.info = info;
+				await fetch(endpoint, {
+					headers: {
+						'Content-type': 'application/json'
+					},
+					method: 'POST',
+					body: JSON.stringify({
+						"slug": getSlug(),
+						"url": getURL(),
+						"data": this.info
+					})
+				}).then(function(resp) {
+					if (resp.status === 201) {
+						if (confirm("Shortlink created at " + document.URL + "#" + getSlug() + ". Copy to clipboard?")) {
+							copy(document.URL + "#" + getSlug());
+						}
+					} else if (resp.status === 502) {
+						alert("Invalid long URL!");
+						err(resp.json());
+					} else {
+						err(resp.json());
 					}
-				} else {
-					err(resp);
-				}
-			});
-		} else {
-			alert("That slug is taken!");
-		}
-	});
+				});
+			} else {
+				alert("That slug is taken!");
+			}
+		});
 }
 
 document.getElementById("url").focus();
