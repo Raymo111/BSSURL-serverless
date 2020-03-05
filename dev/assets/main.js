@@ -1,7 +1,7 @@
-let endpoint = "https://dev-bssurl.raymo.workers.dev/";
+let endpoint = "https://bssurl.azurewebsites.net/api/v1/slug";
 
 async function getReq(slug) {
-	return await fetch(endpoint + slug);
+	return await fetch(endpoint + "/" + slug);
 }
 
 function err(resp) {
@@ -17,7 +17,7 @@ async function init() { // Wrap in async function b/c JS is super annoying
 			.then(r => r.json())
 			.then(function(resp) {
 				if (resp != null) { // Redirect
-					window.location.href = resp.url;
+					window.location.href = resp.dest;
 				} else { // Show page
 					document.getElementById("page").style.display = "inline";
 				}
@@ -33,7 +33,7 @@ async function init() { // Wrap in async function b/c JS is super annoying
 				.then(r => r.json())
 				.then(function(resp) {
 					if (resp != null) { // Redirect
-						window.location.href = resp.url;
+						window.location.href = resp.dest;
 					}
 				});
 		}
@@ -154,7 +154,7 @@ async function shorten() {
 		method: 'POST',
 		body: JSON.stringify({
 			"slug": getSlug(),
-			"url": getURL(),
+			"dest": getURL(),
 			"data": this.info
 		})
 	}).then(function(resp) {
