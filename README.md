@@ -3,7 +3,7 @@
 ![Language count](https://img.shields.io/github/languages/count/Raymo111/BSSURL)
 ![Top language](https://img.shields.io/github/languages/top/Raymo111/BSSURL)
 ![Last commit](https://img.shields.io/github/last-commit/Raymo111/BSSURL)
-![Maintenance](https://img.shields.io/maintenance/no)
+![Maintenance](https://img.shields.io/maintenance/no/2020)
 
 ![Preview](assets/social.png)
 
